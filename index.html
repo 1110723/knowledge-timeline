@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>知識タイムライン</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f12;
+  --surface: #1a1a22;
+  --surface-hover: #22222e;
+  --border: #2a2a38;
+  --text: #e8e6f0;
+  --text-secondary: #8a88a0;
+  --accent: #6c5ce7;
+  --accent-glow: rgba(108, 92, 231, 0.25);
+  --accent-light: #a29bfe;
+  --danger: #fd6a6a;
+  --danger-bg: rgba(253, 106, 106, 0.1);
+  --success: #55efc4;
+  --success-bg: rgba(85, 239, 196, 0.1);
+  --card-radius: 16px;
+  --modal-radius: 20px;
+  --font-main: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ─── Header ─── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 15, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+}
+.icon-btn:active {
+  transform: scale(0.92);
+  background: var(--surface-hover);
+}
+.icon-btn.accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+.icon-btn.accent:active {
+  background: #5a4bd6;
+}
+
+/* ─── Timeline ─── */
+.timeline {
+  padding: 12px 16px;
+  padding-bottom: calc(80px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: calc(100vh - 70px);
+}
+
+/* ─── Empty State ─── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+.empty-state .empty-icon {
+  font-size: 56px;
+  filter: grayscale(0.3);
+}
+.empty-state .empty-text {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ─── Card ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 16px;
+  transition: all 0.3s ease;
+  animation: cardIn 0.4s ease both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card.checked {
+  opacity: 0.5;
+  border-color: var(--success);
+  background: var(--success-bg);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.card-emoji {
+  font-size: 28px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+.card-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.card-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.card-body {
+  font-size: 15px;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.card-action-btn {
+  height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-family: var(--font-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+}
+.card-action-btn:active {
+  transform: scale(0.94);
+}
+.card-action-btn.check-active {
+  background: var(--success-bg);
+  border-color: var(--success);
+  color: var(--success);
+}
+.card-action-btn.danger:active {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* ─── FAB ─── */
+.fab {
+  position: fixed;
+  bottom: calc(20px + var(--safe-bottom));
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 28px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 24px var(--accent-glow);
+  transition: all 0.2s;
+  z-index: 50;
+  -webkit-appearance: none;
+}
+.fab:active {
+  transform: scale(0.9);
+}
+
+/* ─── Modal Overlay ─── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.modal-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-sheet {
+  background: var(--surface);
+  border-radius: var(--modal-radius) var(--modal-radius) 0 0;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 20px calc(20px + var(--safe-bottom));
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.modal-overlay.visible .modal-sheet {
+  transform: translateY(0);
+}
+.modal-handle {
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  margin: 0 auto 16px;
+}
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ─── Form Elements ─── */
+textarea, input[type="password"] {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 15px;
+  padding: 14px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+textarea:focus, input[type="password"]:focus {
+  border-color: var(--accent);
+}
+textarea {
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.btn {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+  min-width: 44px;
+}
+.btn:active { transform: scale(0.96); }
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-full { width: 100%; }
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.btn-row .btn { flex: 1; }
+
+.error-msg {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 8px;
+  display: none;
+}
+.error-msg.visible { display: block; }
+
+/* ─── Loading ─── */
+.loading-indicator {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: var(--accent-light);
+  font-size: 14px;
+}
+.loading-indicator.visible { display: flex; }
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Preview Cards ─── */
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.preview-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  animation: cardIn 0.3s ease both;
+}
+.preview-emoji {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.preview-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ─── Confirm Dialog ─── */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.confirm-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.confirm-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.confirm-overlay.visible .confirm-box {
+  transform: scale(1);
+}
+.confirm-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.confirm-message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* ─── API Error Toast ─── */
+.error-toast {
+  position: fixed;
+  top: 80px;
+  left: 16px;
+  right: 16px;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  z-index: 500;
+  display: none;
+  animation: slideDown 0.3s ease;
+}
+.error-toast.visible { display: block; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Sort Loading Overlay ─── */
+.sort-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 150;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.sort-loading.visible { display: flex; }
+.sort-loading-inner {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--accent-light);
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<!-- API Key Modal -->
+<div class="modal-overlay" id="apiKeyOverlay" data-testid="api-key-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🔑 APIキー設定</div>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">
+      Gemini APIキーを入力してください。<br>キーはこの端末にのみ保存されます。
+    </p>
+    <input type="password" id="apiKeyInput" data-testid="api-key-input"
+           placeholder="APIキーを入力…" autocomplete="off">
+    <div class="error-msg" id="apiKeyError" data-testid="api-key-error">APIキーを入力してください</div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-full" id="saveApiKeyBtn" data-testid="save-api-key-button">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main App -->
+<header class="header">
+  <div class="header-title">📘 知識タイムライン</div>
+  <div class="header-actions">
+    <button class="icon-btn" id="sortBtn" data-testid="sort-button" title="AI並び替え">🔀</button>
+  </div>
+</header>
+
+<main class="timeline" id="timeline"></main>
+
+<!-- FAB -->
+<button class="fab" id="addBtn" data-testid="add-button" title="新規登録">＋</button>
+
+<!-- Card Registration Modal -->
+<div class="modal-overlay" id="cardModalOverlay">
+  <div class="modal-sheet" data-testid="modal" id="cardModal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏️ 知識カードを生成</div>
+    <textarea id="textInput" data-testid="text-input"
+              placeholder="テキストを貼り付けてください&#10;（参考書の1章分など長文もOK）"></textarea>
+    <div class="error-msg" id="generateError" data-testid="generate-error">テキストを入力してください</div>
+    <div style="margin-top:12px;">
+      <button class="btn btn-primary btn-full" id="generateBtn" data-testid="generate-button">
+        🤖 AIに生成させる
+      </button>
+    </div>
+    <div class="loading-indicator" id="loadingIndicator" data-testid="loading-indicator">
+      <div class="spinner"></div>
+      <span>生成中…</span>
+    </div>
+    <div class="preview-list" id="previewList"></div>
+    <div class="btn-row" id="previewActions" style="display:none;">
+      <button class="btn btn-secondary" id="cancelBtn" data-testid="cancel-button">キャンセル</button>
+      <button class="btn btn-primary" id="saveBtn" data-testid="save-button">💾 保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="confirm-overlay" id="confirmOverlay" data-testid="confirm-dialog">
+  <div class="confirm-box">
+    <div class="confirm-title">🗑️ カードを削除</div>
+    <div class="confirm-message">このカードを削除しますか？<br>この操作は取り消せません。</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="cancelDeleteBtn" data-testid="cancel-delete">キャンセル</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" data-testid="confirm-delete">削除</button>
+    </div>
+  </div>
+</div>
+
+<!-- Error Toast -->
+<div class="error-toast" id="errorToast" data-testid="error-message"></div>
+
+<!-- Sort Loading -->
+<div class="sort-loading" id="sortLoading">
+  <div class="sort-loading-inner">
+    <div class="spinner"></div>
+    <span>並び替え中…</span>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  IndexedDB
+// ═══════════════════════════════════════
+const DB_NAME = 'KnowledgeTimelineDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'cards';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveCard(card) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put(card);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getAllCards() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const req = tx.objectStore(STORE_NAME).getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deleteCard(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function clearAllCards() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+// ═══════════════════════════════════════
+//  Gemini API
+// ═══════════════════════════════════════
+function getApiKey() {
+  return localStorage.getItem('gemini_api_key') || '';
+}
+
+async function callGemini(prompt) {
+  const key = getApiKey();
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7 }
+    })
+  });
+  if (!resp.ok) {
+    const errData = await resp.json().catch(() => ({}));
+    throw new Error(errData.error?.message || `API Error: ${resp.status}`);
+  }
+  const data = await resp.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  return text;
+}
+
+async function generateCards(inputText) {
+  const prompt = `以下のテキストを読んで、「へぇー」となる知識を200文字以内でできるだけ多く抽出してください。
+参考書の1章分など長いテキストを想定しています。
+タイムラインに流れるカード形式で表示するため、各カードは端的かつ面白い内容にしてください。
+また、各カードの内容にあった絵文字を1つ選んでください。
+
+JSON配列形式で返してください（余分なテキストは不要、JSONのみ）：
+[
+  { "text": "...", "emoji": "..." },
+  { "text": "...", "emoji": "..." }
+]
+
+【テキスト】
+${inputText}`;
+
+  const raw = await callGemini(prompt);
+  // Extract JSON from response
+  const jsonMatch = raw.match(/\[[\s\S]*\]/);
+  if (!jsonMatch) throw new Error('JSONの解析に失敗しました');
+  return JSON.parse(jsonMatch[0]);
+}
+
+async function sortCards(cards) {
+  const cardList = cards.map(c => ({ id: c.id, text: c.text }));
+  const prompt = `以下の知識カード一覧を「今日の復習に最適な順」に並び替えてください。
+優先度が高い順にIDのリストをJSONで返してください（余分なテキストは不要、JSONのみ）：
+{ "order": ["id1", "id2", ...] }
+
+【カード一覧】
+${JSON.stringify(cardList, null, 2)}`;
+
+  const raw = await callGemini(prompt);
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('JSONの解析に失敗しました');
+  return JSON.parse(jsonMatch[0]).order;
+}
+
+// ═══════════════════════════════════════
+//  UUID
+// ═══════════════════════════════════════
+function uuid() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+// ═══════════════════════════════════════
+//  Render
+// ═══════════════════════════════════════
+function formatDate(ts) {
+  const d = new Date(ts);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const h = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${m}/${day} ${h}:${min}`;
+}
+
+function renderTimeline(cards) {
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+
+  if (cards.length === 0) {
+    tl.innerHTML = `
+      <div class="empty-state" data-testid="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">カードがありません<br>＋ボタンから知識カードを生成しましょう</div>
+      </div>`;
+    return;
+  }
+
+  cards.forEach((card, idx) => {
+    const el = document.createElement('div');
+    el.className = `card${card.checked ? ' checked' : ''}`;
+    el.setAttribute('data-testid', 'card');
+    el.setAttribute('data-card-id', card.id);
+    el.style.animationDelay = `${idx * 0.05}s`;
+    el.innerHTML = `
+      <div class="card-header">
+        <div class="card-emoji" data-testid="card-emoji">${card.emoji}</div>
+        <div class="card-meta">
+          <div class="card-date">${formatDate(card.createdAt)}</div>
+        </div>
+      </div>
+      <div class="card-body" data-testid="card-text">${escapeHtml(card.text)}</div>
+      <div class="card-footer">
+        <button class="card-action-btn ${card.checked ? 'check-active' : ''}"
+                data-testid="checked-toggle" data-id="${card.id}">
+          ${card.checked ? '✅ 確認済み' : '☐ 未確認'}
+        </button>
+        <button class="card-action-btn danger" data-testid="delete-button" data-id="${card.id}">
+          🗑
+        </button>
+      </div>`;
+    tl.appendChild(el);
+  });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ═══════════════════════════════════════
+//  App State
+// ═══════════════════════════════════════
+let currentCards = [];
+let generatedPreviews = [];
+let deleteTargetId = null;
+
+async function loadAndRender() {
+  currentCards = await getAllCards();
+  currentCards.sort((a, b) => b.createdAt - a.createdAt);
+  renderTimeline(currentCards);
+}
+
+// ═══════════════════════════════════════
+//  API Key Modal
+// ═══════════════════════════════════════
+function showApiKeyModal() {
+  document.getElementById('apiKeyOverlay').classList.add('visible');
+}
+function hideApiKeyModal() {
+  document.getElementById('apiKeyOverlay').classList.remove('visible');
+}
+
+document.getElementById('saveApiKeyBtn').addEventListener('click', () => {
+  const input = document.getElementById('apiKeyInput');
+  const error = document.getElementById('apiKeyError');
+  const val = input.value.trim();
+  if (!val) {
+    error.classList.add('visible');
+    return;
+  }
+  error.classList.remove('visible');
+  localStorage.setItem('gemini_api_key', val);
+  hideApiKeyModal();
+});
+
+document.getElementById('apiKeyInput').addEventListener('input', () => {
+  document.getElementById('apiKeyError').classList.remove('visible');
+});
+
+// ═══════════════════════════════════════
+//  Card Modal
+// ═══════════════════════════════════════
+function showCardModal() {
+  document.getElementById('textInput').value = '';
+  document.getElementById('generateError').classList.remove('visible');
+  document.getElementById('loadingIndicator').classList.remove('visible');
+  document.getElementById('previewList').innerHTML = '';
+  document.getElementById('previewActions').style.display = 'none';
+  document.getElementById('generateBtn').disabled = false;
+  generatedPreviews = [];
+  document.getElementById('cardModalOverlay').classList.add('visible');
+}
+function hideCardModal() {
+  document.getElementById('cardModalOverlay').classList.remove('visible');
+}
+
+document.getElementById('addBtn').addEventListener('click', showCardModal);
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+  hideCardModal();
+});
+
+// Close modal on overlay tap
+document.getElementById('cardModalOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('cardModalOverlay')) {
+    hideCardModal();
+  }
+});
+
+// Generate
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  const input = document.getElementById('textInput').value.trim();
+  const errorEl = document.getElementById('generateError');
+  const loadingEl = document.getElementById('loadingIndicator');
+  const genBtn = document.getElementById('generateBtn');
+  const previewList = document.getElementById('previewList');
+
+  if (!input) {
+    errorEl.classList.add('visible');
+    return;
+  }
+  errorEl.classList.remove('visible');
+
+  genBtn.disabled = true;
+  loadingEl.classList.add('visible');
+  previewList.innerHTML = '';
+  document.getElementById('previewActions').style.display = 'none';
+
+  try {
+    const cards = await generateCards(input);
+    generatedPreviews = cards;
+    loadingEl.classList.remove('visible');
+
+    cards.forEach((c, i) => {
+      const div = document.createElement('div');
+      div.className = 'preview-card';
+      div.setAttribute('data-testid', 'card-preview');
+      div.style.animationDelay = `${i * 0.08}s`;
+      div.innerHTML = `
+        <span class="preview-emoji">${c.emoji}</span>
+        <span class="preview-text">${escapeHtml(c.text)}</span>`;
+      previewList.appendChild(div);
+    });
+
+    document.getElementById('previewActions').style.display = 'flex';
+  } catch (err) {
+    loadingEl.classList.remove('visible');
+    genBtn.disabled = false;
+    showError(err.message || 'カードの生成に失敗しました');
+  }
+});
+
+document.getElementById('textInput').addEventListener('input', () => {
+  document.getElementById('generateError').classList.remove('visible');
+});
+
+// Save previews
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const now = Date.now();
+  const sourceText = document.getElementById('textInput').value.trim();
+
+  for (let i = 0; i < generatedPreviews.length; i++) {
+    const p = generatedPreviews[i];
+    await saveCard({
+      id: uuid(),
+      text: p.text,
+      emoji: p.emoji,
+      checked: false,
+      createdAt: now - i, // slightly different timestamps so order is stable
+      sourceText: sourceText
+    });
+  }
+
+  hideCardModal();
+  await loadAndRender();
+});
+
+// ═══════════════════════════════════════
+//  Confirm Dialog
+// ═══════════════════════════════════════
+function showConfirmDialog(cardId) {
+  deleteTargetId = cardId;
+  document.getElementById('confirmOverlay').classList.add('visible');
+}
+function hideConfirmDialog() {
+  document.getElementById('confirmOverlay').classList.remove('visible');
+  deleteTargetId = null;
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+  if (deleteTargetId) {
+    await deleteCard(deleteTargetId);
+    hideConfirmDialog();
+    await loadAndRender();
+  }
+});
+
+document.getElementById('cancelDeleteBtn').addEventListener('click', hideConfirmDialog);
+
+// ═══════════════════════════════════════
+//  Timeline Event Delegation
+// ═══════════════════════════════════════
+document.getElementById('timeline').addEventListener('click', async (e) => {
+  const toggle = e.target.closest('[data-testid="checked-toggle"]');
+  if (toggle) {
+    const id = toggle.dataset.id;
+    const card = currentCards.find(c => c.id === id);
+    if (card) {
+      card.checked = !card.checked;
+      await saveCard(card);
+      await loadAndRender();
+    }
+    return;
+  }
+
+  const delBtn = e.target.closest('[data-testid="delete-button"]');
+  if (delBtn) {
+    showConfirmDialog(delBtn.dataset.id);
+    return;
+  }
+});
+
+// ═══════════════════════════════════════
+//  AI Sort
+// ═══════════════════════════════════════
+document.getElementById('sortBtn').addEventListener('click', async () => {
+  if (currentCards.length <= 1) return;
+
+  const loadingEl = document.getElementById('sortLoading');
+  loadingEl.classList.add('visible');
+
+  try {
+    const order = await sortCards(currentCards);
+    const cardMap = new Map(currentCards.map(c => [c.id, c]));
+    const sorted = [];
+    for (const id of order) {
+      if (cardMap.has(id)) {
+        sorted.push(cardMap.get(id));
+        cardMap.delete(id);
+      }
+    }
+    // Append any cards not in the order
+    for (const c of cardMap.values()) sorted.push(c);
+    currentCards = sorted;
+    renderTimeline(currentCards);
+  } catch (err) {
+    showError(err.message || '並び替えに失敗しました');
+  } finally {
+    loadingEl.classList.remove('visible');
+  }
+});
+
+// ═══════════════════════════════════════
+//  Error Toast
+// ═══════════════════════════════════════
+let errorTimeout;
+function showError(msg) {
+  const toast = document.getElementById('errorToast');
+  toast.textContent = msg;
+  toast.classList.add('visible');
+  clearTimeout(errorTimeout);
+  errorTimeout = setTimeout(() => toast.classList.remove('visible'), 5000);
+}
+
+// ═══════════════════════════════════════
+//  Test Helpers
+// ═══════════════════════════════════════
+if (window.__TEST__) {
+  window.saveCard = saveCard;
+  window.seedTestCards = async (count = 3) => {
+    const cards = Array.from({ length: count }, (_, i) => ({
+      id: crypto.randomUUID ? crypto.randomUUID() : uuid(),
+      text: `テスト知識カード ${i + 1}：サンプルテキストです`,
+      emoji: ['📚','💡','🔬','🎯','⚡'][i % 5],
+      checked: false,
+      createdAt: Date.now() - i * 1000,
+      sourceText: 'seed'
+    }));
+    for (const card of cards) await saveCard(card);
+    return cards;
+  };
+  window.clearAllCards = clearAllCards;
+  window.loadAndRender = loadAndRender;
+}
+
+// ═══════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════
+(async function init() {
+  if (!getApiKey()) {
+    showApiKeyModal();
+  }
+  await loadAndRender();
+})();
+</script>
+</body>
+</html>
