@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -27,484 +28,486 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+- { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
-  height: 100%;
-  overflow-x: hidden;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-main);
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-text-size-adjust: 100%;
+height: 100%;
+overflow-x: hidden;
+background: var(–bg);
+color: var(–text);
+font-family: var(–font-main);
+-webkit-font-smoothing: antialiased;
+-webkit-tap-highlight-color: transparent;
+-webkit-text-size-adjust: 100%;
 }
 
 /* ─── Header ─── */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(15, 15, 18, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+position: sticky;
+top: 0;
+z-index: 100;
+background: rgba(15, 15, 18, 0.85);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-bottom: 1px solid var(–border);
+padding: 14px 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
 }
 .header-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  background: linear-gradient(135deg, var(--accent-light), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+font-size: 18px;
+font-weight: 700;
+letter-spacing: 0.02em;
+background: linear-gradient(135deg, var(–accent-light), var(–accent));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
 }
 .header-actions {
-  display: flex;
-  gap: 8px;
+display: flex;
+gap: 8px;
 }
 .icon-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-appearance: none;
+width: 44px;
+height: 44px;
+border-radius: 12px;
+border: 1px solid var(–border);
+background: var(–surface);
+color: var(–text);
+font-size: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: all 0.2s;
+-webkit-appearance: none;
 }
 .icon-btn:active {
-  transform: scale(0.92);
-  background: var(--surface-hover);
+transform: scale(0.92);
+background: var(–surface-hover);
 }
 .icon-btn.accent {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  box-shadow: 0 4px 16px var(--accent-glow);
+background: var(–accent);
+border-color: var(–accent);
+color: #fff;
+box-shadow: 0 4px 16px var(–accent-glow);
 }
 .icon-btn.accent:active {
-  background: #5a4bd6;
+background: #5a4bd6;
 }
 
 /* ─── Timeline ─── */
 .timeline {
-  padding: 12px 16px;
-  padding-bottom: calc(80px + var(--safe-bottom));
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: calc(100vh - 70px);
+padding: 12px 16px;
+padding-bottom: calc(80px + var(–safe-bottom));
+display: flex;
+flex-direction: column;
+gap: 12px;
+min-height: calc(100vh - 70px);
 }
 
 /* ─── Empty State ─── */
 .empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 60px 20px;
-  text-align: center;
-  color: var(--text-secondary);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 16px;
+padding: 60px 20px;
+text-align: center;
+color: var(–text-secondary);
 }
 .empty-state .empty-icon {
-  font-size: 56px;
-  filter: grayscale(0.3);
+font-size: 56px;
+filter: grayscale(0.3);
 }
 .empty-state .empty-text {
-  font-size: 15px;
-  line-height: 1.7;
+font-size: 15px;
+line-height: 1.7;
 }
 
 /* ─── Card ─── */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--card-radius);
-  padding: 16px;
-  transition: all 0.3s ease;
-  animation: cardIn 0.4s ease both;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: var(–card-radius);
+padding: 16px;
+transition: all 0.3s ease;
+animation: cardIn 0.4s ease both;
 }
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
 }
 .card.checked {
-  opacity: 0.5;
-  border-color: var(--success);
-  background: var(--success-bg);
+opacity: 0.5;
+border-color: var(–success);
+background: var(–success-bg);
 }
 .card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
 }
 .card-emoji {
-  font-size: 28px;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.05);
-  border-radius: 12px;
-  flex-shrink: 0;
+font-size: 28px;
+width: 42px;
+height: 42px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: rgba(255,255,255,0.05);
+border-radius: 12px;
+flex-shrink: 0;
 }
 .card-meta {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+flex: 1;
+display: flex;
+flex-direction: column;
+gap: 2px;
 }
 .card-date {
-  font-size: 12px;
-  color: var(--text-secondary);
+font-size: 12px;
+color: var(–text-secondary);
 }
 .card-body {
-  font-size: 15px;
-  line-height: 1.75;
-  letter-spacing: 0.01em;
-  margin-bottom: 12px;
-  word-break: break-word;
+font-size: 15px;
+line-height: 1.75;
+letter-spacing: 0.01em;
+margin-bottom: 12px;
+word-break: break-word;
 }
 .card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
+display: flex;
+align-items: center;
+justify-content: flex-end;
+gap: 8px;
 }
 .card-action-btn {
-  height: 44px;
-  min-width: 44px;
-  padding: 0 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-family: var(--font-main);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-appearance: none;
+height: 44px;
+min-width: 44px;
+padding: 0 14px;
+border-radius: 10px;
+border: 1px solid var(–border);
+background: transparent;
+color: var(–text-secondary);
+font-size: 14px;
+font-family: var(–font-main);
+display: flex;
+align-items: center;
+gap: 6px;
+cursor: pointer;
+transition: all 0.2s;
+-webkit-appearance: none;
 }
 .card-action-btn:active {
-  transform: scale(0.94);
+transform: scale(0.94);
 }
 .card-action-btn.check-active {
-  background: var(--success-bg);
-  border-color: var(--success);
-  color: var(--success);
+background: var(–success-bg);
+border-color: var(–success);
+color: var(–success);
 }
 .card-action-btn.danger:active {
-  background: var(--danger-bg);
-  color: var(--danger);
+background: var(–danger-bg);
+color: var(–danger);
 }
 
 /* ─── FAB ─── */
 .fab {
-  position: fixed;
-  bottom: calc(20px + var(--safe-bottom));
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 28px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 24px var(--accent-glow);
-  transition: all 0.2s;
-  z-index: 50;
-  -webkit-appearance: none;
+position: fixed;
+bottom: calc(20px + var(–safe-bottom));
+right: 20px;
+width: 56px;
+height: 56px;
+border-radius: 16px;
+background: var(–accent);
+color: #fff;
+font-size: 28px;
+border: none;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 6px 24px var(–accent-glow);
+transition: all 0.2s;
+z-index: 50;
+-webkit-appearance: none;
 }
 .fab:active {
-  transform: scale(0.9);
+transform: scale(0.9);
 }
 
 /* ─── Modal Overlay ─── */
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 200;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.6);
+backdrop-filter: blur(6px);
+-webkit-backdrop-filter: blur(6px);
+z-index: 200;
+display: flex;
+align-items: flex-end;
+justify-content: center;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s;
 }
 .modal-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
+opacity: 1;
+pointer-events: auto;
 }
 .modal-sheet {
-  background: var(--surface);
-  border-radius: var(--modal-radius) var(--modal-radius) 0 0;
-  width: 100%;
-  max-height: 92vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 20px 20px calc(20px + var(--safe-bottom));
-  transform: translateY(100%);
-  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+background: var(–surface);
+border-radius: var(–modal-radius) var(–modal-radius) 0 0;
+width: 100%;
+max-height: 92vh;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+padding: 20px 20px calc(20px + var(–safe-bottom));
+transform: translateY(100%);
+transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .modal-overlay.visible .modal-sheet {
-  transform: translateY(0);
+transform: translateY(0);
 }
 .modal-handle {
-  width: 36px;
-  height: 5px;
-  border-radius: 3px;
-  background: var(--border);
-  margin: 0 auto 16px;
+width: 36px;
+height: 5px;
+border-radius: 3px;
+background: var(–border);
+margin: 0 auto 16px;
 }
 .modal-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 16px;
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 16px;
 }
 
 /* ─── Form Elements ─── */
-textarea, input[type="password"] {
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-main);
-  font-size: 15px;
-  padding: 14px;
-  resize: none;
-  outline: none;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
+textarea, input[type=“password”] {
+width: 100%;
+border: 1px solid var(–border);
+border-radius: 12px;
+background: var(–bg);
+color: var(–text);
+font-family: var(–font-main);
+font-size: 15px;
+padding: 14px;
+resize: none;
+outline: none;
+transition: border-color 0.2s;
+-webkit-appearance: none;
 }
-textarea:focus, input[type="password"]:focus {
-  border-color: var(--accent);
+textarea:focus, input[type=“password”]:focus {
+border-color: var(–accent);
 }
 textarea {
-  min-height: 120px;
-  line-height: 1.6;
+min-height: 120px;
+line-height: 1.6;
 }
 
 .btn {
-  height: 48px;
-  padding: 0 24px;
-  border-radius: 12px;
-  border: none;
-  font-family: var(--font-main);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s;
-  -webkit-appearance: none;
-  min-width: 44px;
+height: 48px;
+padding: 0 24px;
+border-radius: 12px;
+border: none;
+font-family: var(–font-main);
+font-size: 15px;
+font-weight: 600;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+transition: all 0.2s;
+-webkit-appearance: none;
+min-width: 44px;
 }
 .btn:active { transform: scale(0.96); }
 .btn-primary {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 4px 12px var(--accent-glow);
+background: var(–accent);
+color: #fff;
+box-shadow: 0 4px 12px var(–accent-glow);
 }
 .btn-primary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+opacity: 0.4;
+cursor: not-allowed;
 }
 .btn-secondary {
-  background: var(--bg);
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
+background: var(–bg);
+color: var(–text-secondary);
+border: 1px solid var(–border);
 }
 .btn-danger {
-  background: var(--danger);
-  color: #fff;
+background: var(–danger);
+color: #fff;
 }
 .btn-full { width: 100%; }
 .btn-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
+display: flex;
+gap: 10px;
+margin-top: 16px;
 }
 .btn-row .btn { flex: 1; }
 
 .error-msg {
-  color: var(--danger);
-  font-size: 13px;
-  margin-top: 8px;
-  display: none;
+color: var(–danger);
+font-size: 13px;
+margin-top: 8px;
+display: none;
 }
 .error-msg.visible { display: block; }
 
 /* ─── Loading ─── */
 .loading-indicator {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 20px;
-  color: var(--accent-light);
-  font-size: 14px;
+display: none;
+align-items: center;
+justify-content: center;
+gap: 10px;
+padding: 20px;
+color: var(–accent-light);
+font-size: 14px;
 }
 .loading-indicator.visible { display: flex; }
 .spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+width: 20px;
+height: 20px;
+border: 2px solid var(–border);
+border-top-color: var(–accent);
+border-radius: 50%;
+animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ─── Preview Cards ─── */
 .preview-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 16px;
-  max-height: 300px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-top: 16px;
+max-height: 300px;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
 }
 .preview-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  animation: cardIn 0.3s ease both;
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 12px;
+display: flex;
+gap: 10px;
+align-items: flex-start;
+animation: cardIn 0.3s ease both;
 }
 .preview-emoji {
-  font-size: 22px;
-  flex-shrink: 0;
+font-size: 22px;
+flex-shrink: 0;
 }
 .preview-text {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text);
+font-size: 14px;
+line-height: 1.6;
+color: var(–text);
 }
 
 /* ─── Confirm Dialog ─── */
 .confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.6);
+backdrop-filter: blur(6px);
+-webkit-backdrop-filter: blur(6px);
+z-index: 300;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.25s;
 }
 .confirm-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
+opacity: 1;
+pointer-events: auto;
 }
 .confirm-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--card-radius);
-  padding: 24px;
-  width: 100%;
-  max-width: 320px;
-  text-align: center;
-  transform: scale(0.9);
-  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: var(–card-radius);
+padding: 24px;
+width: 100%;
+max-width: 320px;
+text-align: center;
+transform: scale(0.9);
+transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .confirm-overlay.visible .confirm-box {
-  transform: scale(1);
+transform: scale(1);
 }
 .confirm-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 8px;
+font-size: 16px;
+font-weight: 700;
+margin-bottom: 8px;
 }
 .confirm-message {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  line-height: 1.6;
+font-size: 14px;
+color: var(–text-secondary);
+margin-bottom: 20px;
+line-height: 1.6;
 }
 
 /* ─── API Error Toast ─── */
 .error-toast {
-  position: fixed;
-  top: 80px;
-  left: 16px;
-  right: 16px;
-  background: var(--danger-bg);
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  padding: 14px 18px;
-  border-radius: 12px;
-  font-size: 14px;
-  z-index: 500;
-  display: none;
-  animation: slideDown 0.3s ease;
+position: fixed;
+top: 80px;
+left: 16px;
+right: 16px;
+background: var(–danger-bg);
+border: 1px solid var(–danger);
+color: var(–danger);
+padding: 14px 18px;
+border-radius: 12px;
+font-size: 14px;
+z-index: 500;
+display: none;
+animation: slideDown 0.3s ease;
 }
 .error-toast.visible { display: block; }
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(-10px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 /* ─── Sort Loading Overlay ─── */
 .sort-loading {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 150;
-  display: none;
-  align-items: center;
-  justify-content: center;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.4);
+z-index: 150;
+display: none;
+align-items: center;
+justify-content: center;
 }
 .sort-loading.visible { display: flex; }
 .sort-loading-inner {
-  background: var(--surface);
-  border-radius: 16px;
-  padding: 24px 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  color: var(--accent-light);
-  font-size: 14px;
+background: var(–surface);
+border-radius: 16px;
+padding: 24px 32px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 12px;
+color: var(–accent-light);
+font-size: 14px;
 }
 </style>
+
 </head>
 <body>
 
 <!-- API Key Modal -->
+
 <div class="modal-overlay" id="apiKeyOverlay" data-testid="api-key-modal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -522,6 +525,7 @@ textarea {
 </div>
 
 <!-- Main App -->
+
 <header class="header">
   <div class="header-title">📘 知識タイムライン</div>
   <div class="header-actions">
@@ -532,9 +536,11 @@ textarea {
 <main class="timeline" id="timeline"></main>
 
 <!-- FAB -->
+
 <button class="fab" id="addBtn" data-testid="add-button" title="新規登録">＋</button>
 
 <!-- Card Registration Modal -->
+
 <div class="modal-overlay" id="cardModalOverlay">
   <div class="modal-sheet" data-testid="modal" id="cardModal">
     <div class="modal-handle"></div>
@@ -560,6 +566,7 @@ textarea {
 </div>
 
 <!-- Confirm Dialog -->
+
 <div class="confirm-overlay" id="confirmOverlay" data-testid="confirm-dialog">
   <div class="confirm-box">
     <div class="confirm-title">🗑️ カードを削除</div>
@@ -572,9 +579,11 @@ textarea {
 </div>
 
 <!-- Error Toast -->
+
 <div class="error-toast" id="errorToast" data-testid="error-message"></div>
 
 <!-- Sort Loading -->
+
 <div class="sort-loading" id="sortLoading">
   <div class="sort-loading-inner">
     <div class="spinner"></div>
@@ -653,7 +662,7 @@ function getApiKey() {
 
 async function callGemini(prompt) {
   const key = getApiKey();
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`;
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1033,5 +1042,6 @@ if (window.__TEST__) {
   await loadAndRender();
 })();
 </script>
+
 </body>
 </html>
