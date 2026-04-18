@@ -2,1044 +2,1484 @@
 
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>知識タイムライン</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F5F0E6" />
+<title>Marginalia — 知識のタイムライン</title>
+
+<!-- Fonts: Fraunces (expressive serif) + Noto Serif JP + Zen Kaku Gothic New -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,500&family=Noto+Serif+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
 <style>
-:root {
-  --bg: #0f0f12;
-  --surface: #1a1a22;
-  --surface-hover: #22222e;
-  --border: #2a2a38;
-  --text: #e8e6f0;
-  --text-secondary: #8a88a0;
-  --accent: #6c5ce7;
-  --accent-glow: rgba(108, 92, 231, 0.25);
-  --accent-light: #a29bfe;
-  --danger: #fd6a6a;
-  --danger-bg: rgba(253, 106, 106, 0.1);
-  --success: #55efc4;
-  --success-bg: rgba(85, 239, 196, 0.1);
-  --card-radius: 16px;
-  --modal-radius: 20px;
-  --font-main: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
+  /* ==========================================================
+     Design System
+     ========================================================== */
+  :root {
+    --paper:        #F5F0E6;     /* warm cream parchment */
+    --paper-deep:   #EDE6D5;
+    --card:         #FEFDF8;
+    --ink:          #1A1A1A;     /* sumi */
+    --ink-soft:     #3A3A3A;
+    --ink-muted:    #7A7468;
+    --rule:         #E0D6BE;
+    --rule-soft:    #ECE3CE;
+    --accent:       #B23A30;     /* 朱 vermillion */
+    --accent-deep:  #8C2D26;
+    --navy:         #2A3A52;     /* 藍 indigo */
+    --gold:         #B08A47;
+    --shadow-sm:    0 1px 0 rgba(26,26,26,.04), 0 2px 6px rgba(26,26,26,.04);
+    --shadow-md:    0 2px 0 rgba(26,26,26,.03), 0 10px 24px -8px rgba(26,26,26,.14);
+    --shadow-lg:    0 30px 60px -20px rgba(26,26,26,.28);
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
+    --ff-display: "Fraunces", "Noto Serif JP", ui-serif, Georgia, serif;
+    --ff-jp-serif: "Noto Serif JP", "Fraunces", ui-serif, serif;
+    --ff-body:   "Zen Kaku Gothic New", "Noto Sans JP", system-ui, sans-serif;
+    --ff-mono:   "JetBrains Mono", ui-monospace, Menlo, monospace;
 
-html, body {
-height: 100%;
-overflow-x: hidden;
-background: var(–bg);
-color: var(–text);
-font-family: var(–font-main);
--webkit-font-smoothing: antialiased;
--webkit-tap-highlight-color: transparent;
--webkit-text-size-adjust: 100%;
-}
+    --tap: 44px; /* iOS minimum tap target */
+  }
 
-/* ─── Header ─── */
-.header {
-position: sticky;
-top: 0;
-z-index: 100;
-background: rgba(15, 15, 18, 0.85);
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
-border-bottom: 1px solid var(–border);
-padding: 14px 20px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-}
-.header-title {
-font-size: 18px;
-font-weight: 700;
-letter-spacing: 0.02em;
-background: linear-gradient(135deg, var(–accent-light), var(–accent));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-}
-.header-actions {
-display: flex;
-gap: 8px;
-}
-.icon-btn {
-width: 44px;
-height: 44px;
-border-radius: 12px;
-border: 1px solid var(–border);
-background: var(–surface);
-color: var(–text);
-font-size: 20px;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-transition: all 0.2s;
--webkit-appearance: none;
-}
-.icon-btn:active {
-transform: scale(0.92);
-background: var(–surface-hover);
-}
-.icon-btn.accent {
-background: var(–accent);
-border-color: var(–accent);
-color: #fff;
-box-shadow: 0 4px 16px var(–accent-glow);
-}
-.icon-btn.accent:active {
-background: #5a4bd6;
-}
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-/* ─── Timeline ─── */
-.timeline {
-padding: 12px 16px;
-padding-bottom: calc(80px + var(–safe-bottom));
-display: flex;
-flex-direction: column;
-gap: 12px;
-min-height: calc(100vh - 70px);
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--ff-body);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
 
-/* ─── Empty State ─── */
-.empty-state {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 16px;
-padding: 60px 20px;
-text-align: center;
-color: var(–text-secondary);
-}
-.empty-state .empty-icon {
-font-size: 56px;
-filter: grayscale(0.3);
-}
-.empty-state .empty-text {
-font-size: 15px;
-line-height: 1.7;
-}
+  body {
+    min-height: 100dvh;
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, rgba(178,58,48,.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(42,58,82,.06), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(26,26,26,.012) 0 1px, transparent 1px 3px);
+    background-attachment: fixed;
+  }
 
-/* ─── Card ─── */
-.card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–card-radius);
-padding: 16px;
-transition: all 0.3s ease;
-animation: cardIn 0.4s ease both;
-}
-@keyframes cardIn {
-from { opacity: 0; transform: translateY(12px); }
-to { opacity: 1; transform: translateY(0); }
-}
-.card.checked {
-opacity: 0.5;
-border-color: var(–success);
-background: var(–success-bg);
-}
-.card-header {
-display: flex;
-align-items: center;
-gap: 10px;
-margin-bottom: 10px;
-}
-.card-emoji {
-font-size: 28px;
-width: 42px;
-height: 42px;
-display: flex;
-align-items: center;
-justify-content: center;
-background: rgba(255,255,255,0.05);
-border-radius: 12px;
-flex-shrink: 0;
-}
-.card-meta {
-flex: 1;
-display: flex;
-flex-direction: column;
-gap: 2px;
-}
-.card-date {
-font-size: 12px;
-color: var(–text-secondary);
-}
-.card-body {
-font-size: 15px;
-line-height: 1.75;
-letter-spacing: 0.01em;
-margin-bottom: 12px;
-word-break: break-word;
-}
-.card-footer {
-display: flex;
-align-items: center;
-justify-content: flex-end;
-gap: 8px;
-}
-.card-action-btn {
-height: 44px;
-min-width: 44px;
-padding: 0 14px;
-border-radius: 10px;
-border: 1px solid var(–border);
-background: transparent;
-color: var(–text-secondary);
-font-size: 14px;
-font-family: var(–font-main);
-display: flex;
-align-items: center;
-gap: 6px;
-cursor: pointer;
-transition: all 0.2s;
--webkit-appearance: none;
-}
-.card-action-btn:active {
-transform: scale(0.94);
-}
-.card-action-btn.check-active {
-background: var(–success-bg);
-border-color: var(–success);
-color: var(–success);
-}
-.card-action-btn.danger:active {
-background: var(–danger-bg);
-color: var(–danger);
-}
+  /* Subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: .55;
+    mix-blend-mode: multiply;
+    z-index: 0;
+  }
 
-/* ─── FAB ─── */
-.fab {
-position: fixed;
-bottom: calc(20px + var(–safe-bottom));
-right: 20px;
-width: 56px;
-height: 56px;
-border-radius: 16px;
-background: var(–accent);
-color: #fff;
-font-size: 28px;
-border: none;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-box-shadow: 0 6px 24px var(–accent-glow);
-transition: all 0.2s;
-z-index: 50;
--webkit-appearance: none;
-}
-.fab:active {
-transform: scale(0.9);
-}
+  button { font-family: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  button:disabled { cursor: not-allowed; opacity: .45; }
+  input, textarea { font-family: inherit; color: inherit; }
+  textarea { resize: none; }
 
-/* ─── Modal Overlay ─── */
-.modal-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.6);
-backdrop-filter: blur(6px);
--webkit-backdrop-filter: blur(6px);
-z-index: 200;
-display: flex;
-align-items: flex-end;
-justify-content: center;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.3s;
-}
-.modal-overlay.visible {
-opacity: 1;
-pointer-events: auto;
-}
-.modal-sheet {
-background: var(–surface);
-border-radius: var(–modal-radius) var(–modal-radius) 0 0;
-width: 100%;
-max-height: 92vh;
-overflow-y: auto;
--webkit-overflow-scrolling: touch;
-padding: 20px 20px calc(20px + var(–safe-bottom));
-transform: translateY(100%);
-transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-}
-.modal-overlay.visible .modal-sheet {
-transform: translateY(0);
-}
-.modal-handle {
-width: 36px;
-height: 5px;
-border-radius: 3px;
-background: var(–border);
-margin: 0 auto 16px;
-}
-.modal-title {
-font-size: 18px;
-font-weight: 700;
-margin-bottom: 16px;
-}
+  /* ==========================================================
+     Layout
+     ========================================================== */
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 16px 160px;
+    min-height: 100dvh;
+  }
 
-/* ─── Form Elements ─── */
-textarea, input[type=“password”] {
-width: 100%;
-border: 1px solid var(–border);
-border-radius: 12px;
-background: var(–bg);
-color: var(–text);
-font-family: var(–font-main);
-font-size: 15px;
-padding: 14px;
-resize: none;
-outline: none;
-transition: border-color 0.2s;
--webkit-appearance: none;
-}
-textarea:focus, input[type=“password”]:focus {
-border-color: var(–accent);
-}
-textarea {
-min-height: 120px;
-line-height: 1.6;
-}
+  .masthead {
+    position: relative;
+    padding: 28px 4px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .masthead .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--ff-mono);
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .masthead .meta .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); margin-right: 8px; vertical-align: 1px;
+  }
+  .masthead h1 {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-size: clamp(38px, 10vw, 56px);
+    line-height: .96;
+    letter-spacing: -0.02em;
+    margin: 10px 0 6px;
+    font-variation-settings: "opsz" 96, "SOFT" 50;
+  }
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  .masthead .tagline {
+    font-family: var(--ff-jp-serif);
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: .02em;
+    margin: 4px 0 0;
+  }
+  .masthead .ornament {
+    position: absolute; right: 4px; top: 30px;
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-muted);
+    transform: rotate(-4deg);
+    opacity: .6;
+  }
 
-.btn {
-height: 48px;
-padding: 0 24px;
-border-radius: 12px;
-border: none;
-font-family: var(–font-main);
-font-size: 15px;
-font-weight: 600;
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
-transition: all 0.2s;
--webkit-appearance: none;
-min-width: 44px;
-}
-.btn:active { transform: scale(0.96); }
-.btn-primary {
-background: var(–accent);
-color: #fff;
-box-shadow: 0 4px 12px var(–accent-glow);
-}
-.btn-primary:disabled {
-opacity: 0.4;
-cursor: not-allowed;
-}
-.btn-secondary {
-background: var(–bg);
-color: var(–text-secondary);
-border: 1px solid var(–border);
-}
-.btn-danger {
-background: var(–danger);
-color: #fff;
-}
-.btn-full { width: 100%; }
-.btn-row {
-display: flex;
-gap: 10px;
-margin-top: 16px;
-}
-.btn-row .btn { flex: 1; }
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 2px 10px;
+  }
+  .toolbar .count {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .toolbar .count b {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    margin-right: 4px;
+    letter-spacing: 0;
+  }
 
-.error-msg {
-color: var(–danger);
-font-size: 13px;
-margin-top: 8px;
-display: none;
-}
-.error-msg.visible { display: block; }
+  .sort-button {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: var(--tap);
+    padding: 0 16px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    transition: transform .15s ease, background .2s ease;
+  }
+  .sort-button:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+  .sort-button:active { transform: scale(.97); }
+  .sort-button .ico { font-size: 14px; }
+  .sort-button.loading { pointer-events: none; }
+  .sort-button.loading .ico { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ─── Loading ─── */
-.loading-indicator {
-display: none;
-align-items: center;
-justify-content: center;
-gap: 10px;
-padding: 20px;
-color: var(–accent-light);
-font-size: 14px;
-}
-.loading-indicator.visible { display: flex; }
-.spinner {
-width: 20px;
-height: 20px;
-border: 2px solid var(–border);
-border-top-color: var(–accent);
-border-radius: 50%;
-animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+  /* ==========================================================
+     Timeline + Cards
+     ========================================================== */
+  .timeline { display: flex; flex-direction: column; gap: 14px; padding-top: 6px; }
 
-/* ─── Preview Cards ─── */
-.preview-list {
-display: flex;
-flex-direction: column;
-gap: 10px;
-margin-top: 16px;
-max-height: 300px;
-overflow-y: auto;
--webkit-overflow-scrolling: touch;
-}
-.preview-card {
-background: var(–bg);
-border: 1px solid var(–border);
-border-radius: 12px;
-padding: 12px;
-display: flex;
-gap: 10px;
-align-items: flex-start;
-animation: cardIn 0.3s ease both;
-}
-.preview-emoji {
-font-size: 22px;
-flex-shrink: 0;
-}
-.preview-text {
-font-size: 14px;
-line-height: 1.6;
-color: var(–text);
-}
+  .card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow-sm);
+    transition: transform .25s ease, opacity .25s ease, background .25s ease;
+    animation: cardIn .45s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card::before {
+    /* left ribbon */
+    content: "";
+    position: absolute;
+    left: -1px; top: 18px; bottom: 18px;
+    width: 3px;
+    background: var(--accent);
+    opacity: .85;
+    border-radius: 2px;
+  }
+  .card.checked {
+    background: var(--paper-deep);
+    opacity: .72;
+  }
+  .card.checked::before { background: var(--gold); opacity: .6; }
+  .card.checked .card-text { text-decoration-line: line-through; text-decoration-color: rgba(26,26,26,.25); text-decoration-thickness: 1px; }
 
-/* ─── Confirm Dialog ─── */
-.confirm-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.6);
-backdrop-filter: blur(6px);
--webkit-backdrop-filter: blur(6px);
-z-index: 300;
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 20px;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.25s;
-}
-.confirm-overlay.visible {
-opacity: 1;
-pointer-events: auto;
-}
-.confirm-box {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–card-radius);
-padding: 24px;
-width: 100%;
-max-width: 320px;
-text-align: center;
-transform: scale(0.9);
-transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
-}
-.confirm-overlay.visible .confirm-box {
-transform: scale(1);
-}
-.confirm-title {
-font-size: 16px;
-font-weight: 700;
-margin-bottom: 8px;
-}
-.confirm-message {
-font-size: 14px;
-color: var(–text-secondary);
-margin-bottom: 20px;
-line-height: 1.6;
-}
+  .card-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; margin-bottom: 8px;
+  }
+  .card-emoji {
+    font-size: 26px;
+    line-height: 1;
+    width: 44px; height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    flex: 0 0 auto;
+    font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  }
+  .card-time {
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding-top: 6px;
+    white-space: nowrap;
+  }
+  .card-text {
+    font-family: var(--ff-jp-serif);
+    font-weight: 400;
+    font-size: 15.5px;
+    line-height: 1.75;
+    letter-spacing: .01em;
+    color: var(--ink);
+    margin: 6px 2px 14px;
+    word-break: break-word;
+  }
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    border-top: 1px dashed var(--rule);
+    padding-top: 10px;
+    margin: 0 -2px -2px;
+  }
+  .card-actions { display: flex; gap: 6px; }
+  .icon-btn {
+    min-width: var(--tap); min-height: var(--tap);
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    padding: 0 12px;
+    border-radius: 8px;
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    transition: background .2s ease, color .2s ease;
+  }
+  .icon-btn:hover { background: var(--paper-deep); color: var(--ink); }
+  .icon-btn.danger:hover { background: rgba(178,58,48,.08); color: var(--accent); }
+  .icon-btn .ico { font-size: 15px; }
 
-/* ─── API Error Toast ─── */
-.error-toast {
-position: fixed;
-top: 80px;
-left: 16px;
-right: 16px;
-background: var(–danger-bg);
-border: 1px solid var(–danger);
-color: var(–danger);
-padding: 14px 18px;
-border-radius: 12px;
-font-size: 14px;
-z-index: 500;
-display: none;
-animation: slideDown 0.3s ease;
-}
-.error-toast.visible { display: block; }
-@keyframes slideDown {
-from { opacity: 0; transform: translateY(-10px); }
-to { opacity: 1; transform: translateY(0); }
-}
+  .checked-toggle[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .checked-toggle[aria-pressed="true"]:hover { background: var(--ink); color: var(--paper); }
 
-/* ─── Sort Loading Overlay ─── */
-.sort-loading {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.4);
-z-index: 150;
-display: none;
-align-items: center;
-justify-content: center;
-}
-.sort-loading.visible { display: flex; }
-.sort-loading-inner {
-background: var(–surface);
-border-radius: 16px;
-padding: 24px 32px;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 12px;
-color: var(–accent-light);
-font-size: 14px;
-}
+  /* ==========================================================
+     Empty state
+     ========================================================== */
+  .empty-state {
+    padding: 56px 20px;
+    text-align: center;
+    border: 1px dashed var(--rule);
+    border-radius: 8px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 31px,
+        rgba(178,58,48,.06) 31px 32px
+      );
+    margin-top: 14px;
+  }
+  .empty-state .glyph {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 58px;
+    line-height: 1;
+    color: var(--accent);
+    opacity: .75;
+    letter-spacing: -0.02em;
+  }
+  .empty-state .title {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -.01em;
+    margin: 14px 0 4px;
+  }
+  .empty-state .desc {
+    font-family: var(--ff-jp-serif);
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    max-width: 28ch;
+    margin: 0 auto;
+  }
+
+  /* ==========================================================
+     Floating Add Button
+     ========================================================== */
+  .add-button {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--ff-display);
+    font-weight: 300;
+    font-size: 34px;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 18px 36px -10px rgba(26,26,26,.45), 0 0 0 6px rgba(245,240,230,.6);
+    z-index: 20;
+    transition: transform .18s ease, background .25s ease;
+  }
+  .add-button:hover { background: var(--accent); transform: translateY(-2px); }
+  .add-button:active { transform: scale(.94); }
+
+  /* ==========================================================
+     Modal baseline
+     ========================================================== */
+  .backdrop {
+    position: fixed; inset: 0;
+    background: rgba(26,26,26,.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex; align-items: flex-end; justify-content: center;
+    z-index: 50;
+    padding: 0;
+    animation: fadeIn .25s ease;
+  }
+  .backdrop.centered { align-items: center; padding: 20px; }
+  @keyframes fadeIn { from { opacity: 0; } }
+
+  .sheet {
+    width: 100%;
+    max-width: 560px;
+    background: var(--paper);
+    border-radius: 18px 18px 0 0;
+    padding: 22px 20px calc(20px + env(safe-area-inset-bottom));
+    box-shadow: var(--shadow-lg);
+    animation: slideUp .32s cubic-bezier(.2,.8,.2,1);
+    max-height: 90dvh;
+    overflow-y: auto;
+    border-top: 1px solid var(--rule);
+  }
+  .backdrop.centered .sheet {
+    border-radius: 14px;
+    max-height: 82dvh;
+  }
+  @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } }
+
+  .sheet .handle {
+    width: 40px; height: 4px; border-radius: 4px;
+    background: var(--rule);
+    margin: -4px auto 16px;
+  }
+  .sheet h2 {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -.01em;
+    margin: 0 0 4px;
+  }
+  .sheet h2 em { font-style: italic; color: var(--accent); }
+  .sheet .sub {
+    font-family: var(--ff-jp-serif);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    margin: 0 0 16px;
+  }
+
+  .field-label {
+    font-family: var(--ff-mono);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 14px 2px 6px;
+    display: block;
+  }
+
+  .text-input, .key-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+    min-height: var(--tap);
+  }
+  textarea.text-input { min-height: 200px; font-family: var(--ff-jp-serif); }
+  .text-input:focus, .key-input:focus {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px rgba(26,26,26,.08);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: var(--tap);
+    padding: 0 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    transition: transform .15s ease, background .2s ease, opacity .2s ease;
+  }
+  .btn:active:not(:disabled) { transform: scale(.97); }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover:not(:disabled) { background: var(--accent); }
+  .btn-danger { background: var(--accent); color: var(--paper); }
+  .btn-danger:hover:not(:disabled) { background: var(--accent-deep); }
+  .btn-ghost { background: transparent; color: var(--ink-soft); border: 1px solid var(--rule); }
+  .btn-ghost:hover { background: var(--paper-deep); color: var(--ink); }
+
+  .btn-row {
+    display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;
+    margin-top: 18px;
+  }
+  .btn-row .grow { flex: 1; }
+
+  /* Generate button special */
+  .generate-button {
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    min-height: 52px;
+    padding: 0 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 10px;
+    transition: background .2s ease, transform .12s ease;
+  }
+  .generate-button .ico { font-family: var(--ff-display); font-style: italic; font-size: 18px; }
+  .generate-button:hover:not(:disabled) { background: var(--accent); }
+  .generate-button:active:not(:disabled) { transform: scale(.99); }
+
+  /* Loading */
+  .loading-indicator {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    background: var(--card);
+    border: 1px dashed var(--rule);
+    border-radius: 10px;
+    font-family: var(--ff-jp-serif);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .loading-indicator .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid var(--rule);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  .loading-indicator .dots::after {
+    content: "";
+    display: inline-block;
+    width: 1ch;
+    animation: dots 1.4s steps(4, end) infinite;
+  }
+  @keyframes dots {
+    0%   { content: ""; }
+    25%  { content: "・"; }
+    50%  { content: "・・"; }
+    75%  { content: "・・・"; }
+    100% { content: ""; }
+  }
+
+  /* Previews */
+  .preview-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 22px 2px 10px;
+  }
+  .preview-header .title {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 20px;
+    letter-spacing: -.01em;
+  }
+  .preview-header .count {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .preview-list { display: flex; flex-direction: column; gap: 10px; }
+  .card-preview {
+    display: flex; gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 12px 14px;
+    animation: cardIn .4s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .card-preview .emoji {
+    font-size: 22px;
+    width: 40px; height: 40px; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--paper);
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  }
+  .card-preview .text {
+    font-family: var(--ff-jp-serif);
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  /* Error messages */
+  .error {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(178,58,48,.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    color: var(--accent-deep);
+    font-size: 13px;
+    font-family: var(--ff-jp-serif);
+  }
+  .error.show { display: block; animation: fadeIn .25s ease; }
+
+  /* API key modal — centered, prominent */
+  .api-key-panel {
+    max-width: 460px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 28px 24px calc(24px + env(safe-area-inset-bottom));
+    position: relative;
+    overflow: hidden;
+  }
+  .api-key-panel::after {
+    content: "MARGINALIA";
+    position: absolute;
+    right: -12px; bottom: -20px;
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 78px;
+    line-height: 1;
+    color: var(--paper-deep);
+    pointer-events: none;
+    letter-spacing: -0.04em;
+    font-weight: 500;
+  }
+  .api-key-panel > * { position: relative; z-index: 1; }
+  .api-key-panel .kicker {
+    font-family: var(--ff-mono);
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .api-key-panel h2 {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: -.015em;
+    margin: 4px 0 8px;
+  }
+  .api-key-panel h2 em { font-style: italic; }
+  .api-key-panel p {
+    font-family: var(--ff-jp-serif);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin: 0 0 16px;
+  }
+
+  /* Confirm dialog */
+  .confirm-panel {
+    max-width: 360px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 22px 20px;
+    text-align: left;
+  }
+  .confirm-panel h3 {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-size: 20px;
+    margin: 0 0 6px;
+  }
+  .confirm-panel p {
+    font-family: var(--ff-jp-serif);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* Global error toast */
+  .error-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 100px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-family: var(--ff-jp-serif);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    max-width: calc(100% - 40px);
+    display: none;
+    animation: fadeIn .25s ease;
+  }
+  .error-toast.show { display: block; }
+  .error-toast::before {
+    content: "⚠";
+    margin-right: 8px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Hidden utility */
+  .hidden { display: none !important; }
+
+  /* Small-screen refinements */
+  @media (max-width: 380px) {
+    .app { padding: 0 14px 160px; }
+    .masthead h1 { font-size: 38px; }
+    .card { padding: 16px; }
+    .sheet { padding: 20px 16px calc(18px + env(safe-area-inset-bottom)); }
+  }
+
+  /* Prevent horizontal scroll strictly */
+  .app, .timeline, .card, .sheet { max-width: 100%; }
 </style>
 
 </head>
 <body>
 
-<!-- API Key Modal -->
+<main class="app">
 
-<div class="modal-overlay" id="apiKeyOverlay" data-testid="api-key-modal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🔑 APIキー設定</div>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">
-      Gemini APIキーを入力してください。<br>キーはこの端末にのみ保存されます。
-    </p>
-    <input type="password" id="apiKeyInput" data-testid="api-key-input"
-           placeholder="APIキーを入力…" autocomplete="off">
-    <div class="error-msg" id="apiKeyError" data-testid="api-key-error">APIキーを入力してください</div>
+  <header class="masthead">
+    <div class="meta">
+      <span><span class="dot"></span>Est. MMXXVI</span>
+      <span id="todayLabel">—</span>
+    </div>
+    <h1>Marginalia<em>.</em></h1>
+    <p class="tagline">知のかたすみに、へぇーを綴じる。</p>
+    <span class="ornament">§ a timeline of small wonders</span>
+  </header>
+
+  <section class="toolbar">
+    <div class="count"><b id="cardCount">0</b>cards on file</div>
+    <button
+      class="sort-button"
+      id="sortButton"
+      data-testid="sort-button"
+      aria-label="AI並び替え"
+    >
+      <span class="ico">🔀</span><span>復習順に並び替え</span>
+    </button>
+  </section>
+
+  <section class="timeline" id="timeline" aria-live="polite"></section>
+
+  <div class="empty-state hidden" id="emptyState" data-testid="empty-state">
+    <div class="glyph">§</div>
+    <div class="title">まだ何も綴じられていません</div>
+    <p class="desc">右下の「＋」から、気になった一節を貼りつけてみましょう。</p>
+  </div>
+</main>
+
+<!-- Floating Add Button -->
+
+<button
+class=“add-button”
+id=“addButton”
+data-testid=“add-button”
+aria-label=“新しいカードを追加”
+
+> +</button>
+
+<!-- ==========================================================
+     API Key Modal
+     ========================================================== -->
+
+<div class="backdrop centered hidden" id="apiKeyModal" data-testid="api-key-modal">
+  <div class="api-key-panel" role="dialog" aria-modal="true" aria-labelledby="apiKeyTitle">
+    <span class="kicker">Setup · Gemini API</span>
+    <h2 id="apiKeyTitle">はじめに<em>、</em>鍵を。</h2>
+    <p>カード生成に Gemini API を使用します。APIキーは端末内にのみ保管され、サーバーには送信されません。</p>
+
+```
+<label class="field-label" for="apiKeyInput">API Key</label>
+<input
+  class="key-input"
+  id="apiKeyInput"
+  data-testid="api-key-input"
+  type="password"
+  autocomplete="off"
+  autocapitalize="off"
+  spellcheck="false"
+  placeholder="AIza…"
+/>
+
+<div class="error" id="apiKeyError" data-testid="api-key-error">
+  APIキーを入力してください。
+</div>
+
+<div class="btn-row">
+  <button
+    class="btn btn-primary grow"
+    id="saveApiKeyButton"
+    data-testid="save-api-key-button"
+  >保存してはじめる</button>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ==========================================================
+     Card Compose Modal
+     ========================================================== -->
+
+<div class="backdrop hidden" id="modal" data-testid="modal">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="handle" aria-hidden="true"></div>
+    <h2 id="modalTitle">新しい知の<em>断片</em>を</h2>
+    <p class="sub">参考書・記事・メモなど、長文を貼りつけてください。AIが200文字以内のカードに刻みます。</p>
+
+```
+<label class="field-label" for="textInput">Source text</label>
+<textarea
+  class="text-input"
+  id="textInput"
+  data-testid="text-input"
+  placeholder="例：光合成は植物が光エネルギーを化学エネルギーに変換する過程で..."
+></textarea>
+
+<div class="error" id="generateError" data-testid="generate-error">
+  テキストを入力してください。
+</div>
+
+<button
+  class="generate-button"
+  id="generateButton"
+  data-testid="generate-button"
+>
+  <span class="ico">✒</span><span>AIに刻んでもらう</span>
+</button>
+
+<!-- Loading -->
+<div class="loading-indicator hidden" id="loadingIndicator" data-testid="loading-indicator">
+  <div class="spinner" aria-hidden="true"></div>
+  <div>知識を抽出しています<span class="dots"></span></div>
+</div>
+
+<!-- Preview -->
+<div id="previewContainer" class="hidden">
+  <div class="preview-header">
+    <span class="title">生成された断片</span>
+    <span class="count" id="previewCount">0 cards</span>
+  </div>
+  <div class="preview-list" id="previewList"></div>
+</div>
+
+<div class="btn-row">
+  <button
+    class="btn btn-ghost"
+    id="cancelButton"
+    data-testid="cancel-button"
+  >キャンセル</button>
+  <button
+    class="btn btn-primary"
+    id="saveButton"
+    data-testid="save-button"
+    disabled
+  >タイムラインに綴じる</button>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ==========================================================
+     Confirm Delete Dialog
+     ========================================================== -->
+
+<div class="backdrop centered hidden" id="confirmDialog" data-testid="confirm-dialog">
+  <div class="confirm-panel" role="dialog" aria-modal="true">
+    <h3>このカードを削除しますか？</h3>
+    <p>削除したカードは元に戻せません。</p>
     <div class="btn-row">
-      <button class="btn btn-primary btn-full" id="saveApiKeyBtn" data-testid="save-api-key-button">保存</button>
+      <button
+        class="btn btn-ghost"
+        id="cancelDelete"
+        data-testid="cancel-delete"
+      >キャンセル</button>
+      <button
+        class="btn btn-danger"
+        id="confirmDelete"
+        data-testid="confirm-delete"
+      >削除する</button>
     </div>
   </div>
 </div>
 
-<!-- Main App -->
+<!-- Global error toast -->
 
-<header class="header">
-  <div class="header-title">📘 知識タイムライン</div>
-  <div class="header-actions">
-    <button class="icon-btn" id="sortBtn" data-testid="sort-button" title="AI並び替え">🔀</button>
-  </div>
-</header>
-
-<main class="timeline" id="timeline"></main>
-
-<!-- FAB -->
-
-<button class="fab" id="addBtn" data-testid="add-button" title="新規登録">＋</button>
-
-<!-- Card Registration Modal -->
-
-<div class="modal-overlay" id="cardModalOverlay">
-  <div class="modal-sheet" data-testid="modal" id="cardModal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">✏️ 知識カードを生成</div>
-    <textarea id="textInput" data-testid="text-input"
-              placeholder="テキストを貼り付けてください&#10;（参考書の1章分など長文もOK）"></textarea>
-    <div class="error-msg" id="generateError" data-testid="generate-error">テキストを入力してください</div>
-    <div style="margin-top:12px;">
-      <button class="btn btn-primary btn-full" id="generateBtn" data-testid="generate-button">
-        🤖 AIに生成させる
-      </button>
-    </div>
-    <div class="loading-indicator" id="loadingIndicator" data-testid="loading-indicator">
-      <div class="spinner"></div>
-      <span>生成中…</span>
-    </div>
-    <div class="preview-list" id="previewList"></div>
-    <div class="btn-row" id="previewActions" style="display:none;">
-      <button class="btn btn-secondary" id="cancelBtn" data-testid="cancel-button">キャンセル</button>
-      <button class="btn btn-primary" id="saveBtn" data-testid="save-button">💾 保存</button>
-    </div>
-  </div>
-</div>
-
-<!-- Confirm Dialog -->
-
-<div class="confirm-overlay" id="confirmOverlay" data-testid="confirm-dialog">
-  <div class="confirm-box">
-    <div class="confirm-title">🗑️ カードを削除</div>
-    <div class="confirm-message">このカードを削除しますか？<br>この操作は取り消せません。</div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" id="cancelDeleteBtn" data-testid="cancel-delete">キャンセル</button>
-      <button class="btn btn-danger" id="confirmDeleteBtn" data-testid="confirm-delete">削除</button>
-    </div>
-  </div>
-</div>
-
-<!-- Error Toast -->
-
-<div class="error-toast" id="errorToast" data-testid="error-message"></div>
-
-<!-- Sort Loading -->
-
-<div class="sort-loading" id="sortLoading">
-  <div class="sort-loading-inner">
-    <div class="spinner"></div>
-    <span>並び替え中…</span>
-  </div>
-</div>
+<div class="error-toast" id="errorMessage" data-testid="error-message"></div>
 
 <script>
-// ═══════════════════════════════════════
-//  IndexedDB
-// ═══════════════════════════════════════
-const DB_NAME = 'KnowledgeTimelineDB';
-const DB_VERSION = 1;
-const STORE_NAME = 'cards';
+(() => {
+  'use strict';
 
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
+  /* ============================================================
+     Constants & keys
+     ============================================================ */
+  const LS_KEY = 'gemini_api_key';
+  const DB_NAME = 'knowledge_timeline_db';
+  const DB_VERSION = 1;
+  const STORE = 'cards';
+  const MODEL = 'gemini-2.5-flash';
+  const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-async function saveCard(card) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    tx.objectStore(STORE_NAME).put(card);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-async function getAllCards() {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readonly');
-    const req = tx.objectStore(STORE_NAME).getAll();
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function deleteCard(id) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    tx.objectStore(STORE_NAME).delete(id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-async function clearAllCards() {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    tx.objectStore(STORE_NAME).clear();
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-// ═══════════════════════════════════════
-//  Gemini API
-// ═══════════════════════════════════════
-function getApiKey() {
-  return localStorage.getItem('gemini_api_key') || '';
-}
-
-async function callGemini(prompt) {
-  const key = getApiKey();
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`;
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7 }
-    })
-  });
-  if (!resp.ok) {
-    const errData = await resp.json().catch(() => ({}));
-    throw new Error(errData.error?.message || `API Error: ${resp.status}`);
-  }
-  const data = await resp.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  return text;
-}
-
-async function generateCards(inputText) {
-  const prompt = `以下のテキストを読んで、「へぇー」となる知識を200文字以内でできるだけ多く抽出してください。
-参考書の1章分など長いテキストを想定しています。
-タイムラインに流れるカード形式で表示するため、各カードは端的かつ面白い内容にしてください。
-また、各カードの内容にあった絵文字を1つ選んでください。
-
-JSON配列形式で返してください（余分なテキストは不要、JSONのみ）：
-[
-  { "text": "...", "emoji": "..." },
-  { "text": "...", "emoji": "..." }
-]
-
-【テキスト】
-${inputText}`;
-
-  const raw = await callGemini(prompt);
-  // Extract JSON from response
-  const jsonMatch = raw.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) throw new Error('JSONの解析に失敗しました');
-  return JSON.parse(jsonMatch[0]);
-}
-
-async function sortCards(cards) {
-  const cardList = cards.map(c => ({ id: c.id, text: c.text }));
-  const prompt = `以下の知識カード一覧を「今日の復習に最適な順」に並び替えてください。
-優先度が高い順にIDのリストをJSONで返してください（余分なテキストは不要、JSONのみ）：
-{ "order": ["id1", "id2", ...] }
-
-【カード一覧】
-${JSON.stringify(cardList, null, 2)}`;
-
-  const raw = await callGemini(prompt);
-  const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('JSONの解析に失敗しました');
-  return JSON.parse(jsonMatch[0]).order;
-}
-
-// ═══════════════════════════════════════
-//  UUID
-// ═══════════════════════════════════════
-function uuid() {
-  if (crypto.randomUUID) return crypto.randomUUID();
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = Math.random() * 16 | 0;
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-}
-
-// ═══════════════════════════════════════
-//  Render
-// ═══════════════════════════════════════
-function formatDate(ts) {
-  const d = new Date(ts);
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const h = String(d.getHours()).padStart(2, '0');
-  const min = String(d.getMinutes()).padStart(2, '0');
-  return `${m}/${day} ${h}:${min}`;
-}
-
-function renderTimeline(cards) {
-  const tl = document.getElementById('timeline');
-  tl.innerHTML = '';
-
-  if (cards.length === 0) {
-    tl.innerHTML = `
-      <div class="empty-state" data-testid="empty-state">
-        <div class="empty-icon">📭</div>
-        <div class="empty-text">カードがありません<br>＋ボタンから知識カードを生成しましょう</div>
-      </div>`;
-    return;
-  }
-
-  cards.forEach((card, idx) => {
-    const el = document.createElement('div');
-    el.className = `card${card.checked ? ' checked' : ''}`;
-    el.setAttribute('data-testid', 'card');
-    el.setAttribute('data-card-id', card.id);
-    el.style.animationDelay = `${idx * 0.05}s`;
-    el.innerHTML = `
-      <div class="card-header">
-        <div class="card-emoji" data-testid="card-emoji">${card.emoji}</div>
-        <div class="card-meta">
-          <div class="card-date">${formatDate(card.createdAt)}</div>
-        </div>
-      </div>
-      <div class="card-body" data-testid="card-text">${escapeHtml(card.text)}</div>
-      <div class="card-footer">
-        <button class="card-action-btn ${card.checked ? 'check-active' : ''}"
-                data-testid="checked-toggle" data-id="${card.id}">
-          ${card.checked ? '✅ 確認済み' : '☐ 未確認'}
-        </button>
-        <button class="card-action-btn danger" data-testid="delete-button" data-id="${card.id}">
-          🗑
-        </button>
-      </div>`;
-    tl.appendChild(el);
-  });
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// ═══════════════════════════════════════
-//  App State
-// ═══════════════════════════════════════
-let currentCards = [];
-let generatedPreviews = [];
-let deleteTargetId = null;
-
-async function loadAndRender() {
-  currentCards = await getAllCards();
-  currentCards.sort((a, b) => b.createdAt - a.createdAt);
-  renderTimeline(currentCards);
-}
-
-// ═══════════════════════════════════════
-//  API Key Modal
-// ═══════════════════════════════════════
-function showApiKeyModal() {
-  document.getElementById('apiKeyOverlay').classList.add('visible');
-}
-function hideApiKeyModal() {
-  document.getElementById('apiKeyOverlay').classList.remove('visible');
-}
-
-document.getElementById('saveApiKeyBtn').addEventListener('click', () => {
-  const input = document.getElementById('apiKeyInput');
-  const error = document.getElementById('apiKeyError');
-  const val = input.value.trim();
-  if (!val) {
-    error.classList.add('visible');
-    return;
-  }
-  error.classList.remove('visible');
-  localStorage.setItem('gemini_api_key', val);
-  hideApiKeyModal();
-});
-
-document.getElementById('apiKeyInput').addEventListener('input', () => {
-  document.getElementById('apiKeyError').classList.remove('visible');
-});
-
-// ═══════════════════════════════════════
-//  Card Modal
-// ═══════════════════════════════════════
-function showCardModal() {
-  document.getElementById('textInput').value = '';
-  document.getElementById('generateError').classList.remove('visible');
-  document.getElementById('loadingIndicator').classList.remove('visible');
-  document.getElementById('previewList').innerHTML = '';
-  document.getElementById('previewActions').style.display = 'none';
-  document.getElementById('generateBtn').disabled = false;
-  generatedPreviews = [];
-  document.getElementById('cardModalOverlay').classList.add('visible');
-}
-function hideCardModal() {
-  document.getElementById('cardModalOverlay').classList.remove('visible');
-}
-
-document.getElementById('addBtn').addEventListener('click', showCardModal);
-
-document.getElementById('cancelBtn').addEventListener('click', () => {
-  hideCardModal();
-});
-
-// Close modal on overlay tap
-document.getElementById('cardModalOverlay').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('cardModalOverlay')) {
-    hideCardModal();
-  }
-});
-
-// Generate
-document.getElementById('generateBtn').addEventListener('click', async () => {
-  const input = document.getElementById('textInput').value.trim();
-  const errorEl = document.getElementById('generateError');
-  const loadingEl = document.getElementById('loadingIndicator');
-  const genBtn = document.getElementById('generateBtn');
-  const previewList = document.getElementById('previewList');
-
-  if (!input) {
-    errorEl.classList.add('visible');
-    return;
-  }
-  errorEl.classList.remove('visible');
-
-  genBtn.disabled = true;
-  loadingEl.classList.add('visible');
-  previewList.innerHTML = '';
-  document.getElementById('previewActions').style.display = 'none';
-
-  try {
-    const cards = await generateCards(input);
-    generatedPreviews = cards;
-    loadingEl.classList.remove('visible');
-
-    cards.forEach((c, i) => {
-      const div = document.createElement('div');
-      div.className = 'preview-card';
-      div.setAttribute('data-testid', 'card-preview');
-      div.style.animationDelay = `${i * 0.08}s`;
-      div.innerHTML = `
-        <span class="preview-emoji">${c.emoji}</span>
-        <span class="preview-text">${escapeHtml(c.text)}</span>`;
-      previewList.appendChild(div);
+  /* ============================================================
+     IndexedDB helpers
+     ============================================================ */
+  let _dbPromise = null;
+  function openDB() {
+    if (_dbPromise) return _dbPromise;
+    _dbPromise = new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(STORE)) {
+          const store = db.createObjectStore(STORE, { keyPath: 'id' });
+          store.createIndex('createdAt', 'createdAt', { unique: false });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
     });
-
-    document.getElementById('previewActions').style.display = 'flex';
-  } catch (err) {
-    loadingEl.classList.remove('visible');
-    genBtn.disabled = false;
-    showError(err.message || 'カードの生成に失敗しました');
+    return _dbPromise;
   }
-});
 
-document.getElementById('textInput').addEventListener('input', () => {
-  document.getElementById('generateError').classList.remove('visible');
-});
+  function tx(mode = 'readonly') {
+    return openDB().then(db => db.transaction(STORE, mode).objectStore(STORE));
+  }
 
-// Save previews
-document.getElementById('saveBtn').addEventListener('click', async () => {
-  const now = Date.now();
-  const sourceText = document.getElementById('textInput').value.trim();
-
-  for (let i = 0; i < generatedPreviews.length; i++) {
-    const p = generatedPreviews[i];
-    await saveCard({
-      id: uuid(),
-      text: p.text,
-      emoji: p.emoji,
-      checked: false,
-      createdAt: now - i, // slightly different timestamps so order is stable
-      sourceText: sourceText
+  async function saveCard(card) {
+    const store = await tx('readwrite');
+    return new Promise((resolve, reject) => {
+      const r = store.put(card);
+      r.onsuccess = () => resolve(card);
+      r.onerror = () => reject(r.error);
     });
   }
 
-  hideCardModal();
-  await loadAndRender();
-});
-
-// ═══════════════════════════════════════
-//  Confirm Dialog
-// ═══════════════════════════════════════
-function showConfirmDialog(cardId) {
-  deleteTargetId = cardId;
-  document.getElementById('confirmOverlay').classList.add('visible');
-}
-function hideConfirmDialog() {
-  document.getElementById('confirmOverlay').classList.remove('visible');
-  deleteTargetId = null;
-}
-
-document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-  if (deleteTargetId) {
-    await deleteCard(deleteTargetId);
-    hideConfirmDialog();
-    await loadAndRender();
-  }
-});
-
-document.getElementById('cancelDeleteBtn').addEventListener('click', hideConfirmDialog);
-
-// ═══════════════════════════════════════
-//  Timeline Event Delegation
-// ═══════════════════════════════════════
-document.getElementById('timeline').addEventListener('click', async (e) => {
-  const toggle = e.target.closest('[data-testid="checked-toggle"]');
-  if (toggle) {
-    const id = toggle.dataset.id;
-    const card = currentCards.find(c => c.id === id);
-    if (card) {
-      card.checked = !card.checked;
-      await saveCard(card);
-      await loadAndRender();
-    }
-    return;
+  async function getAllCards() {
+    const store = await tx('readonly');
+    return new Promise((resolve, reject) => {
+      const r = store.getAll();
+      r.onsuccess = () => resolve(r.result || []);
+      r.onerror = () => reject(r.error);
+    });
   }
 
-  const delBtn = e.target.closest('[data-testid="delete-button"]');
-  if (delBtn) {
-    showConfirmDialog(delBtn.dataset.id);
-    return;
+  async function deleteCardById(id) {
+    const store = await tx('readwrite');
+    return new Promise((resolve, reject) => {
+      const r = store.delete(id);
+      r.onsuccess = () => resolve();
+      r.onerror = () => reject(r.error);
+    });
   }
-});
 
-// ═══════════════════════════════════════
-//  AI Sort
-// ═══════════════════════════════════════
-document.getElementById('sortBtn').addEventListener('click', async () => {
-  if (currentCards.length <= 1) return;
-
-  const loadingEl = document.getElementById('sortLoading');
-  loadingEl.classList.add('visible');
-
-  try {
-    const order = await sortCards(currentCards);
-    const cardMap = new Map(currentCards.map(c => [c.id, c]));
-    const sorted = [];
-    for (const id of order) {
-      if (cardMap.has(id)) {
-        sorted.push(cardMap.get(id));
-        cardMap.delete(id);
-      }
-    }
-    // Append any cards not in the order
-    for (const c of cardMap.values()) sorted.push(c);
-    currentCards = sorted;
-    renderTimeline(currentCards);
-  } catch (err) {
-    showError(err.message || '並び替えに失敗しました');
-  } finally {
-    loadingEl.classList.remove('visible');
+  async function clearAll() {
+    const store = await tx('readwrite');
+    return new Promise((resolve, reject) => {
+      const r = store.clear();
+      r.onsuccess = () => resolve();
+      r.onerror = () => reject(r.error);
+    });
   }
-});
 
-// ═══════════════════════════════════════
-//  Error Toast
-// ═══════════════════════════════════════
-let errorTimeout;
-function showError(msg) {
-  const toast = document.getElementById('errorToast');
-  toast.textContent = msg;
-  toast.classList.add('visible');
-  clearTimeout(errorTimeout);
-  errorTimeout = setTimeout(() => toast.classList.remove('visible'), 5000);
-}
-
-// ═══════════════════════════════════════
-//  Test Helpers
-// ═══════════════════════════════════════
-if (window.__TEST__) {
-  window.saveCard = saveCard;
-  window.seedTestCards = async (count = 3) => {
-    const cards = Array.from({ length: count }, (_, i) => ({
-      id: crypto.randomUUID ? crypto.randomUUID() : uuid(),
-      text: `テスト知識カード ${i + 1}：サンプルテキストです`,
-      emoji: ['📚','💡','🔬','🎯','⚡'][i % 5],
-      checked: false,
-      createdAt: Date.now() - i * 1000,
-      sourceText: 'seed'
-    }));
-    for (const card of cards) await saveCard(card);
-    return cards;
+  /* ============================================================
+     State
+     ============================================================ */
+  const state = {
+    cards: [],         // current timeline order
+    previewCards: [],  // pending (generated but not saved)
+    customOrder: null, // optional manual order of ids (from AI sort)
+    pendingDeleteId: null
   };
-  window.clearAllCards = clearAllCards;
-  window.loadAndRender = loadAndRender;
-}
 
-// ═══════════════════════════════════════
-//  Init
-// ═══════════════════════════════════════
-(async function init() {
-  if (!getApiKey()) {
-    showApiKeyModal();
+  /* ============================================================
+     DOM refs
+     ============================================================ */
+  const $ = (sel) => document.querySelector(sel);
+  const timelineEl      = $('#timeline');
+  const emptyStateEl    = $('#emptyState');
+  const cardCountEl     = $('#cardCount');
+  const todayLabelEl    = $('#todayLabel');
+
+  const addBtn          = $('#addButton');
+  const sortBtn         = $('#sortButton');
+
+  const apiKeyModal     = $('#apiKeyModal');
+  const apiKeyInput     = $('#apiKeyInput');
+  const saveApiKeyBtn   = $('#saveApiKeyButton');
+  const apiKeyError     = $('#apiKeyError');
+
+  const modal           = $('#modal');
+  const textInput       = $('#textInput');
+  const generateBtn     = $('#generateButton');
+  const generateError   = $('#generateError');
+  const loadingEl       = $('#loadingIndicator');
+  const previewWrap     = $('#previewContainer');
+  const previewList     = $('#previewList');
+  const previewCount    = $('#previewCount');
+  const saveBtn         = $('#saveButton');
+  const cancelBtn       = $('#cancelButton');
+
+  const confirmDialog   = $('#confirmDialog');
+  const confirmDeleteBtn= $('#confirmDelete');
+  const cancelDeleteBtn = $('#cancelDelete');
+
+  const errorToast      = $('#errorMessage');
+
+  /* ============================================================
+     Utilities
+     ============================================================ */
+  function uuid() {
+    if (crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
-  await loadAndRender();
+
+  function formatTime(ts) {
+    try {
+      const d = new Date(ts);
+      const now = new Date();
+      const diff = (now - d) / 1000;
+      if (diff < 60) return 'いま';
+      if (diff < 3600) return `${Math.floor(diff/60)}分前`;
+      if (diff < 86400) return `${Math.floor(diff/3600)}時間前`;
+      if (diff < 86400*7) return `${Math.floor(diff/86400)}日前`;
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return `${y}.${m}.${day}`;
+    } catch { return ''; }
+  }
+
+  function showToast(msg) {
+    errorToast.textContent = msg;
+    errorToast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => errorToast.classList.remove('show'), 4500);
+  }
+
+  function hideToast() {
+    errorToast.classList.remove('show');
+  }
+
+  function sanitizeEmoji(e) {
+    if (typeof e !== 'string' || !e.trim()) return '📜';
+    // Take the first visible character (grapheme-ish)
+    return Array.from(e.trim())[0] || '📜';
+  }
+
+  function truncate(txt, max = 200) {
+    if (typeof txt !== 'string') return '';
+    txt = txt.trim();
+    return txt.length <= max ? txt : txt.slice(0, max);
+  }
+
+  /* ============================================================
+     Rendering
+     ============================================================ */
+  function renderTimeline() {
+    timelineEl.innerHTML = '';
+    const list = orderedCards();
+    cardCountEl.textContent = list.length;
+
+    if (list.length === 0) {
+      emptyStateEl.classList.remove('hidden');
+      return;
+    }
+    emptyStateEl.classList.add('hidden');
+
+    const frag = document.createDocumentFragment();
+    list.forEach(card => frag.appendChild(renderCard(card)));
+    timelineEl.appendChild(frag);
+  }
+
+  function orderedCards() {
+    if (state.customOrder && state.customOrder.length) {
+      const byId = new Map(state.cards.map(c => [c.id, c]));
+      const ordered = [];
+      const seen = new Set();
+      state.customOrder.forEach(id => {
+        if (byId.has(id)) { ordered.push(byId.get(id)); seen.add(id); }
+      });
+      // Append any cards that were missed
+      state.cards.forEach(c => { if (!seen.has(c.id)) ordered.push(c); });
+      return ordered;
+    }
+    // Default: newest first
+    return [...state.cards].sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  function renderCard(card) {
+    const el = document.createElement('article');
+    el.className = 'card' + (card.checked ? ' checked' : '');
+    el.setAttribute('data-testid', 'card');
+    el.dataset.id = card.id;
+
+    el.innerHTML = `
+      <div class="card-head">
+        <span class="card-emoji" data-testid="card-emoji">${escapeHtml(card.emoji || '📜')}</span>
+        <span class="card-time">${escapeHtml(formatTime(card.createdAt))}</span>
+      </div>
+      <p class="card-text" data-testid="card-text">${escapeHtml(card.text)}</p>
+      <div class="card-foot">
+        <div class="card-actions">
+          <button
+            class="icon-btn checked-toggle"
+            data-testid="checked-toggle"
+            aria-pressed="${card.checked ? 'true' : 'false'}"
+            aria-label="確認済みにする"
+          >
+            <span class="ico">${card.checked ? '✓' : '○'}</span>
+            <span>${card.checked ? '確認済み' : '未確認'}</span>
+          </button>
+        </div>
+        <button
+          class="icon-btn danger delete-button"
+          data-testid="delete-button"
+          aria-label="このカードを削除"
+        >
+          <span class="ico">✕</span>
+          <span>削除</span>
+        </button>
+      </div>
+    `;
+
+    // Interactions
+    el.querySelector('.checked-toggle').addEventListener('click', () => toggleChecked(card.id));
+    el.querySelector('.delete-button').addEventListener('click', () => askDelete(card.id));
+
+    return el;
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  /* ============================================================
+     Card operations
+     ============================================================ */
+  async function toggleChecked(id) {
+    const c = state.cards.find(x => x.id === id);
+    if (!c) return;
+    c.checked = !c.checked;
+    await saveCard(c);
+    renderTimeline();
+  }
+
+  function askDelete(id) {
+    state.pendingDeleteId = id;
+    confirmDialog.classList.remove('hidden');
+  }
+
+  async function confirmDeletion() {
+    const id = state.pendingDeleteId;
+    if (!id) return;
+    await deleteCardById(id);
+    state.cards = state.cards.filter(c => c.id !== id);
+    if (state.customOrder) state.customOrder = state.customOrder.filter(x => x !== id);
+    state.pendingDeleteId = null;
+    confirmDialog.classList.add('hidden');
+    renderTimeline();
+  }
+
+  function cancelDeletion() {
+    state.pendingDeleteId = null;
+    confirmDialog.classList.add('hidden');
+  }
+
+  /* ============================================================
+     API Key flow
+     ============================================================ */
+  function getApiKey() {
+    try { return localStorage.getItem(LS_KEY) || ''; }
+    catch { return ''; }
+  }
+
+  function setApiKey(k) {
+    try { localStorage.setItem(LS_KEY, k); } catch {}
+  }
+
+  function ensureApiKeyUI() {
+    const k = getApiKey();
+    if (!k) {
+      apiKeyModal.classList.remove('hidden');
+    } else {
+      apiKeyModal.classList.add('hidden');
+    }
+  }
+
+  saveApiKeyBtn.addEventListener('click', () => {
+    const v = (apiKeyInput.value || '').trim();
+    if (!v) {
+      apiKeyError.classList.add('show');
+      return;
+    }
+    apiKeyError.classList.remove('show');
+    setApiKey(v);
+    apiKeyInput.value = '';
+    apiKeyModal.classList.add('hidden');
+  });
+
+  apiKeyInput.addEventListener('input', () => {
+    if (apiKeyInput.value.trim()) apiKeyError.classList.remove('show');
+  });
+
+  /* ============================================================
+     Compose modal
+     ============================================================ */
+  function openComposeModal() {
+    modal.classList.remove('hidden');
+    textInput.value = '';
+    generateError.classList.remove('show');
+    loadingEl.classList.add('hidden');
+    previewWrap.classList.add('hidden');
+    previewList.innerHTML = '';
+    state.previewCards = [];
+    saveBtn.disabled = true;
+    generateBtn.disabled = false;
+    setTimeout(() => textInput.focus(), 80);
+  }
+
+  function closeComposeModal() {
+    modal.classList.add('hidden');
+    state.previewCards = [];
+  }
+
+  addBtn.addEventListener('click', openComposeModal);
+  cancelBtn.addEventListener('click', closeComposeModal);
+
+  textInput.addEventListener('input', () => {
+    if (textInput.value.trim()) generateError.classList.remove('show');
+  });
+
+  generateBtn.addEventListener('click', async () => {
+    const src = textInput.value.trim();
+    if (!src) {
+      generateError.classList.add('show');
+      return;
+    }
+    generateError.classList.remove('show');
+    hideToast();
+
+    // Lock UI
+    generateBtn.disabled = true;
+    saveBtn.disabled = true;
+    previewWrap.classList.add('hidden');
+    previewList.innerHTML = '';
+    loadingEl.classList.remove('hidden');
+
+    try {
+      const cards = await geminiGenerateCards(src);
+      if (!cards.length) throw new Error('生成結果が空でした');
+      state.previewCards = cards.map(c => ({
+        id: uuid(),
+        text: truncate(c.text, 200),
+        emoji: sanitizeEmoji(c.emoji),
+        checked: false,
+        createdAt: Date.now(),
+        sourceText: src.slice(0, 500)
+      }));
+      renderPreview();
+      saveBtn.disabled = false;
+    } catch (err) {
+      console.error(err);
+      showToast(err && err.message ? `生成に失敗しました：${err.message}` : '生成に失敗しました');
+    } finally {
+      loadingEl.classList.add('hidden');
+      generateBtn.disabled = false;
+    }
+  });
+
+  function renderPreview() {
+    previewList.innerHTML = '';
+    previewCount.textContent = `${state.previewCards.length} cards`;
+    state.previewCards.forEach((c, i) => {
+      const el = document.createElement('div');
+      el.className = 'card-preview';
+      el.setAttribute('data-testid', 'card-preview');
+      el.style.animationDelay = (i * 40) + 'ms';
+      el.innerHTML = `
+        <span class="emoji">${escapeHtml(c.emoji)}</span>
+        <div class="text">${escapeHtml(c.text)}</div>
+      `;
+      previewList.appendChild(el);
+    });
+    previewWrap.classList.remove('hidden');
+  }
+
+  saveBtn.addEventListener('click', async () => {
+    if (!state.previewCards.length) return;
+    saveBtn.disabled = true;
+    try {
+      // Give each card a slightly distinct createdAt to preserve order
+      const base = Date.now();
+      for (let i = 0; i < state.previewCards.length; i++) {
+        const c = state.previewCards[i];
+        c.createdAt = base + i; // later ones are slightly "newer"
+        await saveCard(c);
+        state.cards.push(c);
+      }
+      state.customOrder = null; // reset any AI ordering so newest show on top
+      renderTimeline();
+      closeComposeModal();
+    } catch (err) {
+      console.error(err);
+      showToast('保存に失敗しました');
+      saveBtn.disabled = false;
+    }
+  });
+
+  /* ============================================================
+     Confirm dialog
+     ============================================================ */
+  confirmDeleteBtn.addEventListener('click', confirmDeletion);
+  cancelDeleteBtn.addEventListener('click', cancelDeletion);
+
+  /* Close modals on backdrop click (not on inner click) */
+  [modal, confirmDialog].forEach(bd => {
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd) {
+        if (bd === modal) closeComposeModal();
+        else cancelDeletion();
+      }
+    });
+  });
+
+  /* ============================================================
+     Gemini API
+     ============================================================ */
+  async function geminiCall(prompt) {
+    const key = getApiKey();
+    if (!key) throw new Error('APIキーが設定されていません');
+
+    const url = `${API_BASE}/${MODEL}:generateContent?key=${encodeURIComponent(key)}`;
+    let resp;
+    try {
+      resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.7,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+    } catch (e) {
+      throw new Error('ネットワークに接続できません');
+    }
+
+    if (!resp.ok) {
+      let detail = '';
+      try {
+        const j = await resp.json();
+        detail = j?.error?.message || '';
+      } catch {}
+      if (resp.status === 400 || resp.status === 401 || resp.status === 403) {
+        throw new Error('APIキーが無効か権限がありません' + (detail ? `（${detail}）` : ''));
+      }
+      throw new Error(`APIエラー（${resp.status}）${detail ? '：' + detail : ''}`);
+    }
+
+    let data;
+    try { data = await resp.json(); }
+    catch { throw new Error('APIレスポンスが不正です'); }
+
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (typeof text !== 'string') throw new Error('APIレスポンスにテキストがありません');
+    return text;
+  }
+
+  function parseLooseJson(s) {
+    // Strip code fences if present
+    const cleaned = String(s).replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+    try { return JSON.parse(cleaned); }
+    catch {
+      // Last-ditch: find first [ ... ] or { ... }
+      const m = cleaned.match(/[\[\{][\s\S]*[\]\}]/);
+      if (m) return JSON.parse(m[0]);
+      throw new Error('JSONの解析に失敗しました');
+    }
+  }
+
+  async function geminiGenerateCards(sourceText) {
+    const prompt = [
+      '以下のテキストを読んで、「へぇー」となる知識を200文字以内でできるだけ多く抽出してください。',
+      '参考書の1章分など長いテキストを想定しています。',
+      'タイムラインに流れるカード形式で表示するため、各カードは端的かつ面白い内容にしてください。',
+      'また、各カードの内容にあった絵文字を1つ選んでください。',
+      '',
+      '出力は必ず以下のJSON配列のみとし、前後に説明文を付けないでください：',
+      '[{ "text": "...", "emoji": "..." }, ...]',
+      '',
+      '【テキスト】',
+      sourceText
+    ].join('\n');
+
+    const raw = await geminiCall(prompt);
+    const parsed = parseLooseJson(raw);
+    const arr = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.cards) ? parsed.cards : []);
+    return arr
+      .filter(x => x && typeof x.text === 'string' && x.text.trim())
+      .map(x => ({ text: truncate(x.text, 200), emoji: sanitizeEmoji(x.emoji) }));
+  }
+
+  async function geminiSortCards(cards) {
+    const prompt = [
+      '以下の知識カード一覧を「今日の復習に最適な順」に並び替えてください。',
+      '優先度が高い順にIDのリストを、必ず以下のJSON形式のみで返してください：',
+      '{ "order": ["id1", "id2", ...] }',
+      '',
+      '【カード一覧】',
+      JSON.stringify(cards.map(c => ({ id: c.id, text: c.text })), null, 2)
+    ].join('\n');
+
+    const raw = await geminiCall(prompt);
+    const parsed = parseLooseJson(raw);
+    const order = Array.isArray(parsed?.order) ? parsed.order : (Array.isArray(parsed) ? parsed : null);
+    if (!order) throw new Error('並び替えの結果が解釈できません');
+    return order;
+  }
+
+  /* ============================================================
+     Sort flow
+     ============================================================ */
+  sortBtn.addEventListener('click', async () => {
+    // Skip if 0 or 1 cards (ET-20)
+    if (state.cards.length < 2) return;
+
+    sortBtn.classList.add('loading');
+    sortBtn.disabled = true;
+    hideToast();
+
+    try {
+      const order = await geminiSortCards(state.cards);
+      state.customOrder = order;
+      renderTimeline();
+    } catch (err) {
+      console.error(err);
+      showToast(err && err.message ? `並び替えに失敗：${err.message}` : '並び替えに失敗しました');
+    } finally {
+      sortBtn.classList.remove('loading');
+      sortBtn.disabled = false;
+    }
+  });
+
+  /* ============================================================
+     Header date
+     ============================================================ */
+  (() => {
+    const d = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    todayLabelEl.textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  })();
+
+  /* ============================================================
+     Init
+     ============================================================ */
+  async function init() {
+    ensureApiKeyUI();
+    try {
+      state.cards = await getAllCards();
+    } catch (err) {
+      console.error(err);
+      state.cards = [];
+    }
+    renderTimeline();
+  }
+
+  /* ============================================================
+     Test hooks
+     ============================================================ */
+  if (typeof window !== 'undefined' && window.__TEST__) {
+    window.saveCard = saveCard;
+    window.getAllCards = getAllCards;
+    window.deleteCardById = deleteCardById;
+
+    window.seedTestCards = async (count = 3) => {
+      const now = Date.now();
+      const emojis = ['📚','💡','🔬','🎯','⚡'];
+      const cards = Array.from({ length: count }, (_, i) => ({
+        id: uuid(),
+        text: `テスト知識カード ${i + 1}：サンプルテキストです`,
+        emoji: emojis[i % emojis.length],
+        checked: false,
+        createdAt: now - i * 1000,
+        sourceText: 'seed'
+      }));
+      for (const c of cards) {
+        await saveCard(c);
+      }
+      // Refresh in-memory state and re-render
+      state.cards = await getAllCards();
+      state.customOrder = null;
+      renderTimeline();
+      return cards;
+    };
+
+    window.clearAllCards = async () => {
+      await clearAll();
+      state.cards = [];
+      state.customOrder = null;
+      renderTimeline();
+    };
+  }
+
+  // Kick off
+  init();
 })();
 </script>
 
